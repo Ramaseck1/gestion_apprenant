@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\PromotionController;
 use App\Services\FirebaseUserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -79,3 +80,16 @@ Route::delete('/referentiels/{id}', [ReferentielController::class, 'destroy']);
 // Route pour lister les référentiels archivés
 Route::get('/archive/referentiels', [ReferentielController::class, 'listArchived']);
 /* }); */
+
+//promotion
+// Route pour créer une promotion
+Route::post('promotions', [PromotionController::class, 'create']);
+
+// Route pour lister toutes les promotions
+Route::get('/promotions', [PromotionController::class, 'index']);
+
+// Route pour récupérer une promotion par ID
+Route::get('/promotions/{id}', [PromotionController::class, 'show']);
+
+// Route pour mettre à jour une promotion
+Route::patch('/promotions/{id}', [PromotionController::class, 'update']);

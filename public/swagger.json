@@ -812,8 +812,461 @@
         }
       }
     }
+,
+
+
+    "/promotions": {
+      "post": {
+        "summary": "Créer une nouvelle promotion",
+        "description": "Créer une promotion avec des référentiels et des apprenants.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "libelle": {
+                  "type": "string",
+                  "example": "Promotion 2024"
+                },
+                "date_debut": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2024-01-01"
+                },
+                "date_fin": {
+                  "type": "string",
+                  "format": "date",
+                  "example": "2024-06-30"
+                },
+                "duree": {
+                  "type": "integer",
+                  "example": 6
+                },
+                "photo": {
+                  "type": "string",
+                  "example": "url_to_cover_photo.jpg"
+                },
+                "referentiels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "infos": {
+                        "type": "string",
+                        "example": "Infos Référentiel 1"
+                      },
+                      "apprenants": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "nom": {
+                              "type": "string",
+                              "example": "Dupont"
+                            },
+                            "prenom": {
+                              "type": "string",
+                              "example": "Jean"
+                            },
+                            "adresse": {
+                              "type": "string",
+                              "example": "123 Rue Exemple"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "jean.dupont@example.com"
+                            },
+                            "password": {
+                              "type": "string",
+                              "example": "password123"
+                            },
+                            "telephone": {
+                              "type": "string",
+                              "example": "771234567"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "Apprenant"
+                            },
+                            "statut": {
+                              "type": "string",
+                              "example": "Actif"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": "url_to_photo.jpg"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "required": ["libelle", "date_debut"]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Promotion créée avec succès.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "promotion_id"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erreur de validation."
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister les promotions",
+        "description": "Récupérer toutes les promotions.",
+        "responses": {
+          "200": {
+            "description": "Liste des promotions.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Promotion"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/promotions/{id}": {
+      "get": {
+        "summary": "Récupérer une promotion par ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails de la promotion.",
+            "schema": {
+              "$ref": "#/definitions/Promotion"
+            }
+          },
+          "404": {
+            "description": "Promotion non trouvée."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Modifier une promotion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "libelle": {
+                  "type": "string"
+                },
+                "date_fin": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "photo": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Promotion modifiée avec succès."
+          },
+          "404": {
+            "description": "Promotion non trouvée."
+          }
+        }
+      }
+    },
+    "/promotions/{id}/referentiels": {
+      "patch": {
+        "summary": "Ajouter ou retirer un référentiel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "referentielId": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["ajouter", "retirer"]
+                }
+              },
+              "required": ["referentielId", "action"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Référentiel ajouté ou retiré avec succès."
+          },
+          "404": {
+            "description": "Promotion ou référentiel non trouvé."
+          }
+        }
+      }
+    },
+    "/promotions/{id}/etat": {
+      "patch": {
+        "summary": "Changer l'état d'une promotion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "etat": {
+                  "type": "string",
+                  "enum": ["Actif", "Cloturer", "Inactif"]
+                }
+              },
+              "required": ["etat"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "État de la promotion modifié avec succès."
+          },
+          "404": {
+            "description": "Promotion non trouvée."
+          }
+        }
+      }
+    },
+    "/promotions/encours": {
+      "get": {
+        "summary": "Récupérer la promotion en cours",
+        "responses": {
+          "200": {
+            "description": "Détails de la promotion en cours.",
+            "schema": {
+              "$ref": "#/definitions/Promotion"
+            }
+          }
+        }
+      }
+    },
+    "/promotions/{id}/cloturer": {
+      "patch": {
+        "summary": "Clôturer une promotion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Promotion clôturée avec succès."
+          },
+          "404": {
+            "description": "Promotion non trouvée."
+          }
+        }
+      }
+    },
+    "/promotions/{id}/refentiels": {
+      "get": {
+        "summary": "Lister les référentiels actifs d'une promotion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des référentiels actifs.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "libelle": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Promotion non trouvée."
+          }
+        }
+      }
+    },
+    "/promotions/{id}/stats": {
+      "get": {
+        "summary": "Afficher les statistiques de la promotion",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistiques de la promotion.",
+            "schema": {
+            
+              "type": "object",
+              "properties": {
+                "nombre_apprenants": {
+                  "type": "integer"
+                },
+                "nombre_referentiels": {
+                  "type": "integer"
+                },
+                "duree_totale": {
+                  "type": "integer"
+                }
+              
+            }
+          }
+          },
+          "404": {
+            "description": "Promotion non trouvée."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Promotion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "libelle": {
+          "type": "string"
+        },
+        "date_debut": {
+          "type": "string",
+          "format": "date"
+        },
+        "date_fin": {
+          "type": "string",
+          "format": "date"
+        },
+        "duree": {
+          "type": "integer"
+        },
+        "photo": {
+          "type": "string"
+        },
+        "referentiels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "infos": {
+                "type": "string"
+              },
+              "apprenants": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Apprenant"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Apprenant": {
+      "type": "object",
+      "properties": {
+        "nom": {
+          "type": "string"
+        },
+        "prenom": {
+          "type": "string"
+        },
+        "adresse": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "telephone": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "statut": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string"
+        }
+      }
+    }
   }
   }
+  
 
 
   

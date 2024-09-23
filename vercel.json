@@ -3,8 +3,8 @@
     "builds": [
       {
         "src": "public/index.php",
-        "use": "@vercel/php"
-      },
+        "use": "@vercel/static-build"
+    },
       {
         "src": "public/swagger.json",
         "use": "@vercel/static"
