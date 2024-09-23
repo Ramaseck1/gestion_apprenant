@@ -4,14 +4,6 @@
       {
         "src": "public/index.php",
         "use": "@vercel/static-build"
-    },
-      {
-        "src": "public/swagger.json",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "public/swagger/*",
-        "use": "@vercel/static"
       }
     ],
     "routes": [
@@ -25,8 +17,14 @@
       },
       {
         "src": "/(.*)",
-        "dest": "public/index.php"
+        "dest": "/public/index.php"
       }
-    ]
+    ],
+    "static": {
+      "includeFiles": [
+        "public/swagger.json",
+        "public/swagger/**"
+      ]
+    }
   }
   
