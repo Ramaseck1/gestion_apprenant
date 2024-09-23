@@ -1,0 +1,32 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "public/index.php",
+        "use": "@vercel/php"
+      },
+      {
+        "src": "public/swagger.json",
+        "use": "@vercel/static"
+      },
+      {
+        "src": "public/swagger/*",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/documentation",
+        "dest": "/public/swagger/index.html"
+      },
+      {
+        "src": "/api/swagger.json",
+        "dest": "/public/swagger.json"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "public/index.php"
+      }
+    ]
+  }
+  
